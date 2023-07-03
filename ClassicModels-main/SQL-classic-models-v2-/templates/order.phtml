@@ -1,0 +1,91 @@
+<?php include './templates/blocs/header.phtml' ?>
+    <header>
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <h1>Commande n°<?=$order['orderNumber']?></h1>
+                    <p>
+                        <strong>Date de commande&nbsp;: </strong><?=$order['orderDate']?><br>
+                        <strong>Statut&nbsp;: </strong>
+                        <?php 
+                            $status="success";
+                            if($order['status']=='Cancelled'){
+                                    $status='danger';
+                            } elseif($order['status']=='Disputed'){
+                                $status='warning';
+                            } elseif($order['status']=='In Process'){
+                                $status='primary';
+                            }
+                        ?>
+                        <span class="badge text-bg-<?=$status?>">
+                            <?=$order['status']?>
+                        </span><br>
+                        <strong>Commentaires&nbsp;: </strong><br>
+                        <?=$order['comments']?>
+                    </p>
+                </div>
+                <div class="col-6">
+                    <h2><?=$order['customerName']?></h2>
+                     <h3><?=$order['contactLastName']?> <?=$order['contactFirstName']?></h3>
+                    <strong><?=$order['phone']?></strong><br>
+                    <strong><?=$order['addressLine1']?></strong><br>
+                    <?php if($order['addressLine2'] != ""):?>
+                        <strong><?=$order['addressLine2']?></strong><br>
+                    <?php endif;?>
+                    <strong>
+                    <?=$order['postalCode']?> -
+                    <?=$order['city']?> -
+                    <?php if($order['state'] != ""):?>
+                        <?=$order['state']?> -
+                    <?php endif;?>
+                    <?=$order['country']?> 
+                        
+                    </strong>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <section id="order-detail">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <h2>Détail de la commande</h2>
+                        <table class="table table-sm table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Code produit</th>
+                                    <th>Dénomination</th>
+                                    <th>Catégorie</th>
+                                    <th>Échelle</th>
+                                    <th>Quantité</th>
+                                    <th>Prix unitaire</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach($orderDetails as $orderDetail) : ?>
+                                <tr>
+                                    <td><a href="product.php?id=<?=$orderDetail['productCode']?>"><?=$orderDetail['productCode']?></a></td>
+                                    <td><a href="product.php?id=<?=$orderDetail['productCode']?>"><?=$orderDetail['productName']?></a></td>
+                                    <td><a href="productline.php?id=<?=$orderDetail['productLine']?>"><?=$orderDetail['productLine']?></a></td>
+                                    <td><?=$orderDetail['productScale']?></td>
+                                    <td><?=$orderDetail['quantityOrdered']?></td>
+                                    <td><?=euro($orderDetail['priceEach'])?></td>
+                                    <td><?=euro($orderDetail['Total'])?></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="6"></td>
+                                    <td><h5><?=euro($order['total'])?></h5></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+<?php include './templates/blocs/footer.phtml' ?>
